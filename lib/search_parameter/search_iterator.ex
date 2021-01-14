@@ -28,6 +28,28 @@ defmodule SearchParameter.SearchIterator do
 
   def next(params), do: "not supported params #{inspect(params)}"
 
+  def next(%CurrentSearch{} = pre_search, opts) when is_list(opts) do
+    %{
+      search_type: next_element_option(@search_types, pre_search.search_type, opts, :search_type),
+      topic: next_element_option(@topics, pre_search.topic, opts, :topic),
+      topic_extension:
+        next_element_option(@topic_extensions, pre_search.topic_extension, opts, :topic_extension),
+      page: next_element_option(@pages, pre_search.page, opts, :page)
+    }
+    |> CurrentSearch.to_struct()
+  end
+
+  def next(params, opts),
+    do: "not supported params #{inspect(params)} and options #{inspect(opts)}"
+
+  def next_element_option(list, cur_ele, options, key) do
+    if key in options do
+      next_element(list, cur_ele)
+    else
+      cur_ele
+    end
+  end
+
   def next_element(list, cur_ele) do
     find_next_element(list, cur_ele)
     |> case do
