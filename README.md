@@ -1,4 +1,7 @@
 # SearchParameter
+To run test:
+  `mix test`
+
 
 To start your Phoenix server:
 
